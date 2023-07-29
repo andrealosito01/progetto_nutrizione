@@ -8,16 +8,23 @@ import java.util.Date;
 public class Piano {
 
     @Id
-    @OneToOne
-    @JoinColumn(name="cliente")
-    private Cliente cliente;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private long id;
 
-    public Cliente getCliente() {
-        return cliente;
+    public long getId() {
+        return id;
     }
 
-    public void setCliente(Cliente cliente) {
-        this.cliente = cliente;
+    @OneToOne
+    @JoinColumn(name="paziente")
+    private Paziente paziente;
+
+    public Paziente getPaziente() {
+        return paziente;
+    }
+
+    public void setPaziente(Paziente paziente) {
+        this.paziente = paziente;
     }
 
     @ManyToOne

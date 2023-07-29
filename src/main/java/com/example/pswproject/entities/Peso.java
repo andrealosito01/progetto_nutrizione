@@ -17,15 +17,15 @@ public class Peso {
     }
 
     @ManyToOne
-    @JoinColumn(name = "cliente", nullable = false)
-    private Cliente cliente;
+    @JoinColumn(name = "paziente", nullable = false)
+    private Paziente paziente;
 
-    public Cliente getCliente() {
-        return cliente;
+    public Paziente getPaziente() {
+        return paziente;
     }
 
-    public void setCliente(Cliente cliente) {
-        this.cliente = cliente;
+    public void setPaziente(Paziente paziente) {
+        this.paziente = paziente;
     }
 
     @Basic(optional = false)

@@ -17,15 +17,15 @@ public class Scheda {
     }
 
     @OneToOne
-    @JoinColumn(name="cliente")
-    private Cliente cliente;
+    @JoinColumn(name="paziente")
+    private Paziente paziente;
 
-    public Cliente getCliente() {
-        return cliente;
+    public Paziente getPaziente() {
+        return paziente;
     }
 
-    public void setCliente(Cliente cliente) {
-        this.cliente = cliente;
+    public void setPaziente(Paziente paziente) {
+        this.paziente = paziente;
     }
 
     @ManyToOne

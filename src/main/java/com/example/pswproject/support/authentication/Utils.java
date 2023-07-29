@@ -27,6 +27,10 @@ public class Utils {
     }
 
     public String getEmail() {
+        return getTokenNode().get("claims").get("email").asText();
+    }
+
+    public String getUsername() {
         return getTokenNode().get("claims").get("preferred_username").asText();
     }
 
