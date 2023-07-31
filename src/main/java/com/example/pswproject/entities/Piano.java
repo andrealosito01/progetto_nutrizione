@@ -28,7 +28,7 @@ public class Piano {
     }
 
     @ManyToOne
-    @JoinColumn(nullable = false,name="Nutrizionista")
+    @JoinColumn(nullable = false, name="Nutrizionista")
     private Nutrizionista nutrizionista;
 
     public Nutrizionista getNutrizionista() {

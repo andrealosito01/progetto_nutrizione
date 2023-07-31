@@ -1,7 +1,6 @@
 package com.example.pswproject.controllers.rest;
 
 import com.example.pswproject.entities.Peso;
-import com.example.pswproject.services.PazienteService;
 import com.example.pswproject.services.PesoService;
 import com.example.pswproject.support.authentication.Utils;
 import com.example.pswproject.support.exceptions.UserNotFoundException;
