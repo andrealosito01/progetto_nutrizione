@@ -49,4 +49,28 @@ public class PazienteController {
         }
     }
 
+    @PreAuthorize("hasAuthority('paziente') and #username == T(com.example.pswproject.support.authentication.Utils).getUsername()")
+    @PutMapping("/{username}")
+    public ResponseEntity<Paziente> updatePaziente(@PathVariable String username, @RequestBody Paziente p){
+        try{
+            Paziente paziente = pazienteService.aggiorna(username,p);
+            return ResponseEntity.ok(paziente);
+        }catch(UsernameAlreadyExistsException e){
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Username già usato!", e);
+        }catch(EmailAlreadyExistsException e){
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Email già usata!", e);
+        }
+    }
+
+    @PreAuthorize("hasAuthority('paziente') and #username == T(com.example.pswproject.support.authentication.Utils).getUsername()")
+    @DeleteMapping("/{username}")
+    public ResponseEntity<Paziente> deletePaziente(@PathVariable String username){
+        try{
+            Paziente paziente = pazienteService.rimuovi(username);
+            return ResponseEntity.ok(paziente);
+        }catch(UserNotFoundException e){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Utente non trovato!", e);
+        }
+    }
+
 }

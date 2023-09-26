@@ -58,4 +58,27 @@ public class PesoService {
         Paziente c = res.get();
         return prep.findAllByPaziente(c);
     }
+
+    /*@Transactional
+    public Peso updatePeso(String data, BigDecimal peso, String username) throws ParseException, UserNotFoundException {
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        Date giorno = simpleDateFormat.parse(data);
+
+        Optional<Paziente> res = rep.findById(username);
+        if(res.isEmpty())
+            throw new UserNotFoundException();
+
+        Paziente c = res.get();
+        Optional<Peso> pesoOp = prep.findByDataAndPaziente(giorno,c);
+
+        Peso p = new Peso();
+        if(pesoOp.isPresent()) {
+            p = pesoOp.get();
+        }
+        p.setPaziente(c);
+        p.setData(giorno);
+        p.setValore(peso);
+
+        return prep.save(p);
+    }*/
 }

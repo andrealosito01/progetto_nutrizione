@@ -23,11 +23,11 @@ public class PesoController {
     @Autowired
     private PesoService pesoService;
 
-    @PreAuthorize("(hasAuthority('paziente') and #username == T(com.example.pswproject.support.authentication.Utils).getUsername()) or hasAuthority('nutrizionista')")
+    @PreAuthorize("hasAuthority('paziente')")
     @GetMapping
-    public ResponseEntity<List<Peso>> getPesi(@RequestParam String username){
+    public ResponseEntity<List<Peso>> getPesi(){
         try {
-            List<Peso> pesi = pesoService.getPesi(username);
+            List<Peso> pesi = pesoService.getPesi(Utils.getUsername());
             return ResponseEntity.ok(pesi);
         }catch(UserNotFoundException e){
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Utente non trovato!", e);
@@ -48,5 +48,11 @@ public class PesoController {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Utente non trovato!", e);
         }
     }
+
+    /*@PreAuthorize("hasAuthority('paziente')")
+    @PutMapping
+    public ResponseEntity<Peso> updatePeso(@RequestParam("giorno") String giorno, @RequestParam("peso") BigDecimal peso){
+
+    }*/
 
 }

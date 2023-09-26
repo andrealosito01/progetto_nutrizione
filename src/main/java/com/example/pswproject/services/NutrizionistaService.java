@@ -41,4 +41,31 @@ public class NutrizionistaService {
         return res.get();
     }
 
+    public Nutrizionista aggiorna(String username, Nutrizionista n) throws EmailAlreadyExistsException, UsernameAlreadyExistsException {
+        Optional<Nutrizionista> OpNutrizionista = rep.findById(username);
+        if(OpNutrizionista.isEmpty())
+            return registra(n);
+
+        Nutrizionista nutrizionista = OpNutrizionista.get();
+        nutrizionista.setDataDiNascita(n.getDataDiNascita());
+        nutrizionista.setFoto(n.getFoto());
+        nutrizionista.setPresentazione(n.getPresentazione());
+        nutrizionista.setEsperienzaFormazione(n.getEsperienzaFormazione());
+        nutrizionista.setSpecializzazione(n.getSpecializzazione());
+        nutrizionista.setFilosofia(n.getFilosofia());
+        nutrizionista.setServizi(n.getServizi());
+
+        return nutrizionista;
+    }
+
+    public Nutrizionista rimuovi(String username) throws UserNotFoundException{
+        Optional<Nutrizionista> OpNutrizionista = rep.findById(username);
+        if(OpNutrizionista.isEmpty())
+            throw new UserNotFoundException();
+
+        Nutrizionista nutrizionista = OpNutrizionista.get();
+        rep.delete(nutrizionista);
+
+        return nutrizionista;
+    }
 }

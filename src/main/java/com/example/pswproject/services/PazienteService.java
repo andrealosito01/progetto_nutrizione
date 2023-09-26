@@ -14,6 +14,7 @@ import java.util.Collection;
 import java.util.Optional;
 
 @Service
+@Transactional
 public class PazienteService {
 
     @Autowired
@@ -22,8 +23,7 @@ public class PazienteService {
     @Autowired
     AccountsManager accountsManager;
 
-   @Transactional
-    public Paziente registra(Paziente p) throws UsernameAlreadyExistsException, EmailAlreadyExistsException {
+   public Paziente registra(Paziente p) throws UsernameAlreadyExistsException, EmailAlreadyExistsException {
 
         if(pazienteRepository.existsById(p.getUsername()))
             throw new UsernameAlreadyExistsException();
@@ -46,6 +46,30 @@ public class PazienteService {
     @Transactional(readOnly = true)
     public Collection<Paziente> getPazienti(){
         return pazienteRepository.findAll();
+    }
+
+    public Paziente aggiorna(String username, Paziente p) throws EmailAlreadyExistsException, UsernameAlreadyExistsException{
+        Optional<Paziente> OpPaziente = pazienteRepository.findById(username);
+        if(OpPaziente.isEmpty())
+            return registra(p);
+
+        Paziente paziente = OpPaziente.get();
+        paziente.setAltezza(p.getAltezza());
+        paziente.setDataDiNascita(p.getDataDiNascita());
+
+        return paziente;
+
+    }
+
+    public Paziente rimuovi(String username) throws UserNotFoundException{
+        Optional<Paziente> OpPaziente = pazienteRepository.findById(username);
+        if(OpPaziente.isEmpty())
+            throw new UserNotFoundException();
+
+        Paziente paziente = OpPaziente.get();
+        pazienteRepository.delete(paziente);
+
+        return paziente;
     }
 
 }
