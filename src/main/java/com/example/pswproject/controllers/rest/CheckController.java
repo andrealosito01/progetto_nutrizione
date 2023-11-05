@@ -19,7 +19,7 @@ public class CheckController {
         return new ResponseEntity("Check status ok!", HttpStatus.OK);
     }
 
-    @PreAuthorize("hasAuthority('cliente')")
+    @PreAuthorize("hasAuthority('paziente')")
     @GetMapping("/logged")
     public ResponseEntity checkLogged() {
         return new ResponseEntity("Check status ok, hi " + Utils.getEmail() + "!", HttpStatus.OK);

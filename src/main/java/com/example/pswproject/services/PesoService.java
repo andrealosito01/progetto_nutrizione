@@ -1,84 +1,73 @@
 package com.example.pswproject.services;
 
-import com.example.pswproject.entities.Paziente;
 import com.example.pswproject.entities.Peso;
-import com.example.pswproject.repositories.PazienteRepository;
+import com.example.pswproject.entities.Utente;
+import com.example.pswproject.repositories.UtenteRepository;
 import com.example.pswproject.repositories.PesoRepository;
-import com.example.pswproject.support.exceptions.UserNotFoundException;
+import com.example.pswproject.support.exceptions.ResourceNotFoundException;
 import com.example.pswproject.support.exceptions.WeightAlreadyInsertedException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.math.BigDecimal;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
 @Service
+@Transactional
 public class PesoService {
 
     @Autowired
-    private PazienteRepository rep;
+    private UtenteRepository utenteRepository;
 
     @Autowired
-    private PesoRepository prep;
+    private PesoRepository pesoRepository;
 
-    @Transactional
-    public Peso addPeso(String data, BigDecimal peso, String username) throws ParseException, WeightAlreadyInsertedException, UserNotFoundException {
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
-        Date giorno = simpleDateFormat.parse(data);
+    public Peso aggiungi(Peso peso, String username) throws WeightAlreadyInsertedException, ResourceNotFoundException {
 
-        Optional<Paziente> res = rep.findById(username);
+        Optional<Utente> res = utenteRepository.findByUsername(username);
         if(res.isEmpty())
-            throw new UserNotFoundException();
+            throw new ResourceNotFoundException();
 
-        Paziente c = res.get();
+        Utente u = res.get();
         // NON devono essere presenti due pesi dello stesso cliente nello stesso giorno
-        if(prep.existsByDataAndPaziente(giorno,c))
-            throw new WeightAlreadyInsertedException();
+        for(Peso p:u.getPesi()){
+            if(peso.getData().equals(p.getData()))
+                throw new WeightAlreadyInsertedException();
+        }
 
-        Peso p = new Peso();
-        p.setPaziente(c);
-        p.setData(giorno);
-        p.setValore(peso);
-
-        return prep.save(p);
+        u.getPesi().add(peso);
+        return pesoRepository.save(peso);
     }
-
 
     @Transactional(readOnly = true)
-    public List<Peso> getPesi(String username) throws UserNotFoundException {
-        Optional<Paziente> res = rep.findById(username);
+    public Collection<Peso> getPesi(String username) throws ResourceNotFoundException { // NON USATO
+        Optional<Utente> res = utenteRepository.findByUsername(username);
         if(res.isEmpty())
-            throw new UserNotFoundException();
+            throw new ResourceNotFoundException();
 
-        Paziente c = res.get();
-        return prep.findAllByPaziente(c);
+        Utente u = res.get();
+        return u.getPesi();
     }
 
-    /*@Transactional
-    public Peso updatePeso(String data, BigDecimal peso, String username) throws ParseException, UserNotFoundException {
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
-        Date giorno = simpleDateFormat.parse(data);
+    public Peso rimuovi(Long id, String username) throws ResourceNotFoundException{
+        // con l'username garantisco che ognuno possa eliminare solo il proprio peso
 
-        Optional<Paziente> res = rep.findById(username);
-        if(res.isEmpty())
-            throw new UserNotFoundException();
+        Optional<Utente> opUtente = utenteRepository.findByUsername(username);
+        if(opUtente.isEmpty())
+            throw new ResourceNotFoundException();
 
-        Paziente c = res.get();
-        Optional<Peso> pesoOp = prep.findByDataAndPaziente(giorno,c);
+        Utente utente = opUtente.get();
+        List<Peso> pesiUtente = utente.getPesi();
 
-        Peso p = new Peso();
-        if(pesoOp.isPresent()) {
-            p = pesoOp.get();
+        for(Peso p:pesiUtente){
+            if(p.getId() == id){
+                pesoRepository.delete(p);
+                return p;
+            }
         }
-        p.setPaziente(c);
-        p.setData(giorno);
-        p.setValore(peso);
 
-        return prep.save(p);
-    }*/
+        throw new ResourceNotFoundException();
+    }
 }

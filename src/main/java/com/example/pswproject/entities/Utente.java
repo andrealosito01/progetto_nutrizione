@@ -1,18 +1,22 @@
 package com.example.pswproject.entities;
 
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Table(name="utenti")
-@Inheritance(strategy = InheritanceType.JOINED)
 public class Utente {
 
     @Id
-    @Column(length = 20)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private long id;
+
+    public long getId(){ return id; }
+
+    @Basic(optional = false)
+    @Column(length = 20, unique = true, nullable = false)
     private String username;
 
     public String getUsername() {
@@ -77,6 +81,38 @@ public class Utente {
 
     public void setDataDiNascita(Date dataDiNascita) {
         this.dataDiNascita = dataDiNascita;
+    }
+
+    @Basic
+    private Short altezza;
+
+    public Short getAltezza() {
+        return altezza;
+    }
+
+    public void setAltezza(Short altezza) {
+        this.altezza = altezza;
+    }
+
+    @OneToOne(orphanRemoval = true)
+    @JoinColumn(name="piano_id")
+    private Piano piano;
+
+    public Piano getPiano() { return piano; }
+
+    public void setPiano(Piano piano) { this.piano = piano; }
+
+
+    @OneToMany(orphanRemoval = true)
+    @JoinColumn(name = "utente_id")
+    private List<Peso> pesi = new ArrayList<>();
+
+    public List<Peso> getPesi() {
+        return pesi;
+    }
+
+    public void setPesi(List<Peso> pesi) {
+        this.pesi = pesi;
     }
 
 }

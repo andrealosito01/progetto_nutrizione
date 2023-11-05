@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.ws.rs.core.Response;
 import java.util.Arrays;
+import java.util.List;
 
 public class AccountsManager {
 
@@ -42,6 +43,7 @@ public class AccountsManager {
             passwordCred.setType(CredentialRepresentation.PASSWORD);
             passwordCred.setValue(password);
             UserResource userResource = usersResource.get(userId);
+            System.out.println(userResource);
             userResource.resetPassword(passwordCred);
             // setto il ruolo dell'utente
             RoleRepresentation userClientRole = realmResource.clients().get(app1Client.getId()).roles().get(role).toRepresentation();
@@ -49,5 +51,31 @@ public class AccountsManager {
         }else{
             throw new RuntimeException();
         }
+    }
+
+    public void modificaPassword(String username, String password){
+        UsersResource usersResource = realmResource.users();
+        UserRepresentation userRepresentation = usersResource.searchByUsername(username,true).get(0);
+        if(userRepresentation == null)
+            throw new RuntimeException();
+
+        UserResource userResource = usersResource.get(userRepresentation.getId());
+        CredentialRepresentation passwordCred = new CredentialRepresentation();
+        passwordCred.setTemporary(false);
+        passwordCred.setType(CredentialRepresentation.PASSWORD);
+        System.out.println(password);
+        passwordCred.setValue(password);
+        userResource.resetPassword(passwordCred);
+
+    }
+
+    public boolean rimuoviDaKeycloak(String username){
+        UsersResource usersResource = realmResource.users();
+        List<UserRepresentation> res = usersResource.searchByUsername(username,true);
+        if(res.size() != 1)
+            return false;
+        UserResource utenteDaEliminare = usersResource.get(res.get(0).getId());
+        utenteDaEliminare.remove();
+        return true;
     }
 }

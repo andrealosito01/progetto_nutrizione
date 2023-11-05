@@ -3,7 +3,7 @@ package com.example.pswproject.controllers.rest;
 import com.example.pswproject.entities.Peso;
 import com.example.pswproject.services.PesoService;
 import com.example.pswproject.support.authentication.Utils;
-import com.example.pswproject.support.exceptions.UserNotFoundException;
+import com.example.pswproject.support.exceptions.ResourceNotFoundException;
 import com.example.pswproject.support.exceptions.WeightAlreadyInsertedException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -12,9 +12,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.math.BigDecimal;
-import java.text.ParseException;
-import java.util.List;
+import java.util.Collection;
 
 @RestController
 @RequestMapping("/peso")
@@ -25,34 +23,37 @@ public class PesoController {
 
     @PreAuthorize("hasAuthority('paziente')")
     @GetMapping
-    public ResponseEntity<List<Peso>> getPesi(){
+    public ResponseEntity<Collection<Peso>> getPesi(){  // NON USATO
         try {
-            List<Peso> pesi = pesoService.getPesi(Utils.getUsername());
+            Collection<Peso> pesi = pesoService.getPesi(Utils.getUsername());
             return ResponseEntity.ok(pesi);
-        }catch(UserNotFoundException e){
+        }catch(ResourceNotFoundException e){
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Utente non trovato!", e);
         }
     }
 
     @PreAuthorize("hasAuthority('paziente')")
     @PostMapping
-    public ResponseEntity<Peso> addPeso(@RequestParam("giorno") String giorno, @RequestParam("peso") BigDecimal peso){
+    public ResponseEntity<Peso> addPeso(@RequestBody Peso peso){
         try {
-            Peso pesoAggiunto = pesoService.addPeso(giorno, peso, Utils.getUsername());
+            Peso pesoAggiunto = pesoService.aggiungi(peso, Utils.getUsername());
             return ResponseEntity.ok(pesoAggiunto);
-        }catch(ParseException e){
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Formato data non valida!", e);
         } catch (WeightAlreadyInsertedException e) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, "Peso di oggi già inserito!", e);
-        } catch (UserNotFoundException e) {
+        } catch (ResourceNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Utente non trovato!", e);
         }
     }
 
-    /*@PreAuthorize("hasAuthority('paziente')")
-    @PutMapping
-    public ResponseEntity<Peso> updatePeso(@RequestParam("giorno") String giorno, @RequestParam("peso") BigDecimal peso){
-
-    }*/
+    @PreAuthorize("hasAuthority('paziente')")
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Peso> deletePeso(@PathVariable Long id){
+        try {
+            Peso pesoRimosso = pesoService.rimuovi(id, Utils.getUsername());
+            return ResponseEntity.ok(pesoRimosso);
+        }catch(ResourceNotFoundException e){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Peso non trovato!", e);
+        }
+    }
 
 }

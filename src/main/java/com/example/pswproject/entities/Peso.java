@@ -16,18 +16,6 @@ public class Peso {
         return id;
     }
 
-    @ManyToOne
-    @JoinColumn(name = "paziente", nullable = false)
-    private Paziente paziente;
-
-    public Paziente getPaziente() {
-        return paziente;
-    }
-
-    public void setPaziente(Paziente paziente) {
-        this.paziente = paziente;
-    }
-
     @Basic(optional = false)
     @Column(nullable = false)
     @Temporal(TemporalType.DATE)

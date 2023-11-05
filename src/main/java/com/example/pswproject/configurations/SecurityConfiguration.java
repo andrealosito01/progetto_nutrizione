@@ -47,8 +47,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         http.csrf().disable().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and().authorizeRequests()
                 .antMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                 .antMatchers("/check/simple").permitAll()
-                .antMatchers("/paziente").permitAll()
-                .antMatchers("/nutrizionista").permitAll()
+                .antMatchers("/utente").permitAll()
                 .anyRequest().authenticated().and().oauth2ResourceServer().jwt().jwtAuthenticationConverter(new JwtAuthenticationConverter(CLIENT_NAME));
     }
 
@@ -93,26 +92,6 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Bean
     public ClientRepresentation clientRepresentation(){
         return realmResource().clients().findByClientId(CLIENT_NAME).get(0);
-    }
-
-    @Bean
-    public TokenService tokenService(){
-        return new TokenService() {
-            @Override
-            public AccessTokenResponse grantToken(String s, MultivaluedMap<String, String> multivaluedMap) {
-                return null;
-            }
-
-            @Override
-            public AccessTokenResponse refreshToken(String s, MultivaluedMap<String, String> multivaluedMap) {
-                return null;
-            }
-
-            @Override
-            public void logout(String s, MultivaluedMap<String, String> multivaluedMap) {
-
-            }
-        };
     }
 
 }
