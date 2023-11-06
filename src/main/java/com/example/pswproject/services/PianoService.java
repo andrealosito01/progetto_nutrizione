@@ -29,15 +29,11 @@ public class PianoService {
             throw new ResourceNotFoundException();
 
         Utente utente = opUtente.get();
-        Piano piano = utente.getPiano();
-
-        if(piano == null)
-            throw new ResourceNotFoundException();
-
-        return piano;
+        return utente.getPiano();
     }
 
     public Piano aggiungi(String username, Piano piano) throws PianoAlreadyExistsException, ResourceNotFoundException {
+        // non uso this.getPiano(username) perchè mi serve l'utente per chiamare setPiano(piano)
         Optional<Utente> opUtente = utenteRepository.findByUsername(username);
         if(opUtente.isEmpty())
             throw new ResourceNotFoundException();

@@ -39,7 +39,7 @@ public class PesoController {
             Peso pesoAggiunto = pesoService.aggiungi(peso, Utils.getUsername());
             return ResponseEntity.ok(pesoAggiunto);
         } catch (WeightAlreadyInsertedException e) {
-            throw new ResponseStatusException(HttpStatus.CONFLICT, "Peso di oggi già inserito!", e);
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Peso già inserito per questa data!", e);
         } catch (ResourceNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Utente non trovato!", e);
         }

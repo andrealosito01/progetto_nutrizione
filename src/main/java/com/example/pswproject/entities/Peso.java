@@ -30,14 +30,14 @@ public class Peso {
     }
 
     @Basic(optional = false)
-    @Column(nullable = false, precision = 4, scale = 1)
-    private BigDecimal valore;
+    @Column(nullable = false)
+    private double valore;
 
-    public BigDecimal getValore() {
+    public double getValore() {
         return valore;
     }
 
-    public void setValore(BigDecimal valore) {
+    public void setValore(double valore) {
         this.valore = valore;
     }
 }

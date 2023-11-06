@@ -25,24 +25,19 @@ public class PesoService {
     private PesoRepository pesoRepository;
 
     public Peso aggiungi(Peso peso, String username) throws WeightAlreadyInsertedException, ResourceNotFoundException {
-
-        Optional<Utente> opUtente = utenteRepository.findByUsername(username);
-        if(opUtente.isEmpty())
-            throw new ResourceNotFoundException();
-
-        Utente utente = opUtente.get();
+        Collection<Peso> pesi = this.getPesi(username);
         // NON devono essere presenti due pesi dello stesso utente nello stesso giorno
-        for(Peso p:utente.getPesi()){
+        for(Peso p:pesi){
             if(peso.getData().equals(p.getData()))
                 throw new WeightAlreadyInsertedException();
         }
 
-        utente.getPesi().add(peso);
+        pesi.add(peso);
         return pesoRepository.save(peso);
     }
 
     @Transactional(readOnly = true)
-    public Collection<Peso> getPesi(String username) throws ResourceNotFoundException { // NON USATO
+    public Collection<Peso> getPesi(String username) throws ResourceNotFoundException {
         Optional<Utente> opUtente = utenteRepository.findByUsername(username);
         if(opUtente.isEmpty())
             throw new ResourceNotFoundException();
@@ -53,15 +48,9 @@ public class PesoService {
 
     public Peso rimuovi(Long id, String username) throws ResourceNotFoundException{
         // con l'username garantisco che ognuno possa eliminare solo il proprio peso
+        Collection<Peso> pesi = this.getPesi(username);
 
-        Optional<Utente> opUtente = utenteRepository.findByUsername(username);
-        if(opUtente.isEmpty())
-            throw new ResourceNotFoundException();
-
-        Utente utente = opUtente.get();
-        List<Peso> pesiUtente = utente.getPesi();
-
-        for(Peso p:pesiUtente){
+        for(Peso p:pesi){
             if(p.getId() == id){
                 pesoRepository.delete(p);
                 return p;

@@ -123,4 +123,12 @@ public class Utente {
 
     public void setMisure(List<Misura> misure) { this.misure = misure; }
 
+    @OneToMany(orphanRemoval = true)
+    @JoinColumn(name = "utente_id")
+    private List<Alimento> alimenti = new ArrayList<>();
+
+    public List<Alimento> getAlimenti() { return alimenti; }
+
+    public void setAlimenti(List<Alimento> alimenti) { this.alimenti = alimenti; }
+
 }

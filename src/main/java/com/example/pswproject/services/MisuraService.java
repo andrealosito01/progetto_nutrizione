@@ -35,31 +35,21 @@ public class MisuraService {
     }
 
     public Misura aggiungi(Misura misura, String username) throws MisuraAlreadyInsertedException, ResourceNotFoundException{
-        Optional<Utente> opUtente = utenteRepository.findByUsername(username);
-        if(opUtente.isEmpty())
-            throw new ResourceNotFoundException();
-
-        Utente utente = opUtente.get();
+        Collection<Misura> misure = this.getMisure(username);
         // NON devono essere presenti due misure dello stesso utente nello stesso giorno
-        for(Misura m:utente.getMisure())
+        for(Misura m:misure)
             if(misura.getData().equals(m.getData()))
                 throw new MisuraAlreadyInsertedException();
 
-        utente.getMisure().add(misura);
+        misure.add(misura);
         return misuraRepository.save(misura);
     }
 
     public Misura modifica(Long id, Misura misura, String username) throws ResourceNotFoundException{
         // con l'username garantisco che ognuno possa modificare solo una propria misura
+        Collection<Misura> misure = this.getMisure(username);
 
-        Optional<Utente> opUtente = utenteRepository.findByUsername(username);
-        if(opUtente.isEmpty())
-            throw new ResourceNotFoundException();
-
-        Utente utente = opUtente.get();
-        List<Misura> listaMisure = utente.getMisure();
-
-        for(Misura m:listaMisure){
+        for(Misura m:misure){
             if(m.getId() == id){
                 m.setBraccioDx(misura.getBraccioDx());
                 m.setBraccioSx(misura.getBraccioSx());
@@ -77,15 +67,9 @@ public class MisuraService {
 
     public Misura rimuovi(Long id, String username) throws ResourceNotFoundException{
         // con l'username garantisco che ognuno possa eliminare solo una propria misura
+        Collection<Misura> misure = this.getMisure(username);
 
-        Optional<Utente> opUtente = utenteRepository.findByUsername(username);
-        if(opUtente.isEmpty())
-            throw new ResourceNotFoundException();
-
-        Utente utente = opUtente.get();
-        List<Misura> listaMisure = utente.getMisure();
-
-        for(Misura m:listaMisure){
+        for(Misura m:misure){
             if(m.getId() == id){
                 misuraRepository.delete(m);
                 return m;
