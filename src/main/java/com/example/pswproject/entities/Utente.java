@@ -115,4 +115,12 @@ public class Utente {
         this.pesi = pesi;
     }
 
+    @OneToMany(orphanRemoval = true)
+    @JoinColumn(name = "utente_id")
+    private List<Misura> misure = new ArrayList<>();
+
+    public List<Misura> getMisure() { return misure; }
+
+    public void setMisure(List<Misura> misure) { this.misure = misure; }
+
 }
