@@ -9,9 +9,9 @@ public class Misura {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private Long id;
 
-    public long getId() { return id; }
+    public Long getId() { return id; }
 
     @Basic(optional = false)
     @Column(nullable = false)

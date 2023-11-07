@@ -5,6 +5,7 @@ import com.example.pswproject.entities.Utente;
 import com.example.pswproject.repositories.AlimentoRepository;
 import com.example.pswproject.repositories.UtenteRepository;
 import com.example.pswproject.support.exceptions.AlimentoAlreadyExistsException;
+import com.example.pswproject.support.exceptions.BadRequestException;
 import com.example.pswproject.support.exceptions.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,10 +19,10 @@ import java.util.Optional;
 public class AlimentoService {
 
     @Autowired
-    UtenteRepository utenteRepository;
+    private UtenteRepository utenteRepository;
 
     @Autowired
-    AlimentoRepository alimentoRepository;
+    private AlimentoRepository alimentoRepository;
 
     @Transactional(readOnly = true)
     public Collection<Alimento> getAlimenti(String username) throws ResourceNotFoundException {
@@ -33,7 +34,10 @@ public class AlimentoService {
         return utente.getAlimenti();
     }
 
-    public Alimento aggiungi(String username, Alimento alimento) throws ResourceNotFoundException, AlimentoAlreadyExistsException {
+    public Alimento aggiungi(String username, Alimento alimento) throws ResourceNotFoundException, AlimentoAlreadyExistsException, BadRequestException {
+        if(isNotValid(alimento))
+            throw new BadRequestException();
+
         Collection<Alimento> alimenti = this.getAlimenti(username);
         for(Alimento a: alimenti)
             if(a.getNome().equals(alimento.getNome()))
@@ -43,45 +47,40 @@ public class AlimentoService {
         return alimentoRepository.save(alimento);
     }
 
-    public Alimento modifica(Long id, String username, Alimento alimento) throws ResourceNotFoundException, AlimentoAlreadyExistsException{
+    private boolean isNotValid(Alimento alimento){
+        return alimento.getId() != null;
+    }
+
+    public Alimento modifica(Long id, String username, Alimento alimento) throws ResourceNotFoundException, AlimentoAlreadyExistsException, BadRequestException {
+        if(isNotValid(alimento))
+            throw new BadRequestException();
+
         Collection<Alimento> alimenti = this.getAlimenti(username);
 
         for(Alimento a:alimenti)
-            if((a.getNome().equalsIgnoreCase(alimento.getNome())) && (a.getId() != id))
+            if((a.getNome().equalsIgnoreCase(alimento.getNome())) && (!a.getId().equals(id)))
                 // c'è già un altro alimento con lo stesso nome che noi stiamo cercando di assegnare
                 throw new AlimentoAlreadyExistsException();
 
+        boolean trovato = false;
         for(Alimento a:alimenti)
-            if(a.getId() == id){
-                a.setNome(alimento.getNome());
-                a.setDescrizione(alimento.getDescrizione());
-                a.setEnergia(alimento.getEnergia());
-                a.setProteine(alimento.getProteine());
-                a.setCarboidrati(alimento.getCarboidrati());
-                a.setFibre(alimento.getFibre());
-                a.setZuccheri(alimento.getZuccheri());
-                a.setGrassiTotali(alimento.getGrassiTotali());
-                a.setGrassiSaturi(alimento.getGrassiSaturi());
-                a.setGrassiPolinsaturi(alimento.getGrassiPolinsaturi());
-                a.setGrassiMonoinsaturi(alimento.getGrassiMonoinsaturi());
-                a.setGrassiTrans(alimento.getGrassiTrans());
-                a.setColesterolo(alimento.getColesterolo());
-                a.setSodio(alimento.getSodio());
-                a.setPotassio(alimento.getPotassio());
-                a.setVitaminaA(alimento.getVitaminaA());
-                a.setVitaminaC(alimento.getVitaminaC());
-                a.setCalcio(alimento.getCalcio());
-                a.setFerro(alimento.getFerro());
-                return a;
+            if(a.getId().equals(id)){
+                alimentoRepository.delete(a);
+                trovato = true;
             }
-        throw new ResourceNotFoundException();
+
+        if(trovato){
+            alimenti.add(alimento);
+            return alimentoRepository.save(alimento);
+        }else
+            throw new ResourceNotFoundException();
     }
 
     public Alimento rimuovi(Long id, String username) throws ResourceNotFoundException{
         Collection<Alimento> alimenti = this.getAlimenti(username);
 
         for(Alimento a: alimenti)
-            if(a.getId() == id){
+            if(a.getId().equals(id)){
                 alimentoRepository.delete(a);
                 return a;
             }

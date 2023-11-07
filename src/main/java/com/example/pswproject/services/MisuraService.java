@@ -4,6 +4,7 @@ import com.example.pswproject.entities.Misura;
 import com.example.pswproject.entities.Utente;
 import com.example.pswproject.repositories.MisuraRepository;
 import com.example.pswproject.repositories.UtenteRepository;
+import com.example.pswproject.support.exceptions.BadRequestException;
 import com.example.pswproject.support.exceptions.MisuraAlreadyInsertedException;
 import com.example.pswproject.support.exceptions.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,7 +12,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collection;
-import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -19,10 +19,10 @@ import java.util.Optional;
 public class MisuraService {
 
     @Autowired
-    UtenteRepository utenteRepository;
+    private UtenteRepository utenteRepository;
 
     @Autowired
-    MisuraRepository misuraRepository;
+    private MisuraRepository misuraRepository;
 
     @Transactional(readOnly = true)
     public Collection<Misura> getMisure(String username) throws ResourceNotFoundException{
@@ -34,7 +34,10 @@ public class MisuraService {
         return utente.getMisure();
     }
 
-    public Misura aggiungi(Misura misura, String username) throws MisuraAlreadyInsertedException, ResourceNotFoundException{
+    public Misura aggiungi(Misura misura, String username) throws MisuraAlreadyInsertedException, ResourceNotFoundException, BadRequestException {
+        if(isNotValid(misura))
+            throw new BadRequestException();
+
         Collection<Misura> misure = this.getMisure(username);
         // NON devono essere presenti due misure dello stesso utente nello stesso giorno
         for(Misura m:misure)
@@ -45,24 +48,33 @@ public class MisuraService {
         return misuraRepository.save(misura);
     }
 
-    public Misura modifica(Long id, Misura misura, String username) throws ResourceNotFoundException{
+    private boolean isNotValid(Misura misura){
+        return misura.getId() != null;
+    }
+
+    public Misura modifica(Long id, Misura misura, String username) throws ResourceNotFoundException, BadRequestException, MisuraAlreadyInsertedException {
+        if(isNotValid(misura))
+            throw new BadRequestException();
+
         // con l'username garantisco che ognuno possa modificare solo una propria misura
         Collection<Misura> misure = this.getMisure(username);
 
+        for(Misura m:misure)
+            if(misura.getData().equals(m.getData()) && !id.equals(m.getId()))
+                throw new MisuraAlreadyInsertedException();
+
+        boolean trovato = false;
         for(Misura m:misure){
-            if(m.getId() == id){
-                m.setBraccioDx(misura.getBraccioDx());
-                m.setBraccioSx(misura.getBraccioSx());
-                m.setTorace(misura.getTorace());
-                m.setVita(misura.getVita());
-                m.setFianchi(misura.getFianchi());
-                m.setGambaDx(misura.getGambaDx());
-                m.setGambaSx(misura.getGambaSx());
-                return m;
+            if(m.getId().equals(id)){
+                misuraRepository.delete(m);
+                trovato = true;
             }
         }
-
-        throw new ResourceNotFoundException();
+        if(trovato) {
+            misure.add(misura);
+            return misuraRepository.save(misura);
+        }else
+            throw new ResourceNotFoundException();
     }
 
     public Misura rimuovi(Long id, String username) throws ResourceNotFoundException{
@@ -70,7 +82,7 @@ public class MisuraService {
         Collection<Misura> misure = this.getMisure(username);
 
         for(Misura m:misure){
-            if(m.getId() == id){
+            if(m.getId().equals(id)){
                 misuraRepository.delete(m);
                 return m;
             }

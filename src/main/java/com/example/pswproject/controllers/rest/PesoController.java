@@ -3,6 +3,7 @@ package com.example.pswproject.controllers.rest;
 import com.example.pswproject.entities.Peso;
 import com.example.pswproject.services.PesoService;
 import com.example.pswproject.support.authentication.Utils;
+import com.example.pswproject.support.exceptions.BadRequestException;
 import com.example.pswproject.support.exceptions.ResourceNotFoundException;
 import com.example.pswproject.support.exceptions.WeightAlreadyInsertedException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,10 +39,12 @@ public class PesoController {
         try {
             Peso pesoAggiunto = pesoService.aggiungi(peso, Utils.getUsername());
             return ResponseEntity.ok(pesoAggiunto);
-        } catch (WeightAlreadyInsertedException e) {
+        }catch(WeightAlreadyInsertedException e){
             throw new ResponseStatusException(HttpStatus.CONFLICT, "Peso già inserito per questa data!", e);
-        } catch (ResourceNotFoundException e) {
+        }catch(ResourceNotFoundException e){
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Utente non trovato!", e);
+        }catch(BadRequestException e){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"Peso non supportato!",e);
         }
     }
 

@@ -8,9 +8,9 @@ public class Piano {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private Long id;
 
-    public long getId() { return id; }
+    public Long getId() { return id; }
 
     @Basic(optional = false)
     @Column(length = 32, nullable = false)
@@ -30,131 +30,131 @@ public class Piano {
 
     @Basic(optional = false)
     @Column(nullable = false)
-    private double proteine;
+    private Double proteine;
 
-    public double getProteine() { return proteine; }
+    public Double getProteine() { return proteine; }
 
-    public void setProteine(double proteine) { this.proteine = proteine; }
-
-    @Basic(optional = false)
-    @Column(nullable = false)
-    private double carboidrati;
-
-    public double getCarboidrati() { return carboidrati; }
-
-    public void setCarboidrati(double carboidrati) { this.carboidrati = carboidrati; }
+    public void setProteine(Double proteine) { this.proteine = proteine; }
 
     @Basic(optional = false)
     @Column(nullable = false)
-    private double fibre;
+    private Double carboidrati;
 
-    public double getFibre() { return fibre; }
+    public Double getCarboidrati() { return carboidrati; }
 
-    public void setFibre(double fibre) { this.fibre = fibre; }
-
-    @Basic(optional = false)
-    @Column(nullable = false)
-    private double zuccheri;
-
-    public double getZuccheri() { return zuccheri; }
-
-    public void setZuccheri(double zuccheri) { this.zuccheri = zuccheri; }
+    public void setCarboidrati(Double carboidrati) { this.carboidrati = carboidrati; }
 
     @Basic(optional = false)
     @Column(nullable = false)
-    private double grassiTotali;
+    private Double fibre;
 
-    public double getGrassiTotali() { return grassiTotali; }
+    public Double getFibre() { return fibre; }
 
-    public void setGrassiTotali(double grassiTotali) { this.grassiTotali = grassiTotali; }
-
-    @Basic(optional = false)
-    @Column(nullable = false)
-    private double grassiSaturi;
-
-    public double getGrassiSaturi() { return grassiSaturi; }
-
-    public void setGrassiSaturi(double grassiSaturi) { this.grassiSaturi = grassiSaturi; }
+    public void setFibre(Double fibre) { this.fibre = fibre; }
 
     @Basic(optional = false)
     @Column(nullable = false)
-    private double grassiPolinsaturi;
+    private Double zuccheri;
 
-    public double getGrassiPolinsaturi() { return grassiPolinsaturi; }
+    public Double getZuccheri() { return zuccheri; }
 
-    public void setGrassiPolinsaturi(double grassiPolinsaturi) { this.grassiPolinsaturi = grassiPolinsaturi; }
-
-    @Basic(optional = false)
-    @Column(nullable = false)
-    private double grassiMonoinsaturi;
-
-    public double getGrassiMonoinsaturi() { return grassiMonoinsaturi; }
-
-    public void setGrassiMonoinsaturi(double grassiMonoinsaturi) { this.grassiMonoinsaturi = grassiMonoinsaturi; }
+    public void setZuccheri(Double zuccheri) { this.zuccheri = zuccheri; }
 
     @Basic(optional = false)
     @Column(nullable = false)
-    private double grassiTrans;
+    private Double grassiTotali;
 
-    public double getGrassiTrans() { return grassiTrans; }
+    public Double getGrassiTotali() { return grassiTotali; }
 
-    public void setGrassiTrans(double grassiTrans) { this.grassiTrans = grassiTrans; }
-
-    @Basic(optional = false)
-    @Column(nullable = false)
-    private double colesterolo;
-
-    public double getColesterolo() { return colesterolo; }
-
-    public void setColesterolo(double colesterolo) { this.colesterolo = colesterolo; }
+    public void setGrassiTotali(Double grassiTotali) { this.grassiTotali = grassiTotali; }
 
     @Basic(optional = false)
     @Column(nullable = false)
-    private double sodio;
+    private Double grassiSaturi;
 
-    public double getSodio() { return sodio; }
+    public Double getGrassiSaturi() { return grassiSaturi; }
 
-    public void setSodio(double sodio) { this.sodio = sodio; }
+    public void setGrassiSaturi(Double grassiSaturi) { this.grassiSaturi = grassiSaturi; }
 
     @Basic(optional = false)
     @Column(nullable = false)
-    private double potassio;
+    private Double grassiPolinsaturi;
 
-    public double getPotassio() { return potassio; }
+    public Double getGrassiPolinsaturi() { return grassiPolinsaturi; }
 
-    public void setPotassio(double potassio) { this.potassio = potassio; }
+    public void setGrassiPolinsaturi(Double grassiPolinsaturi) { this.grassiPolinsaturi = grassiPolinsaturi; }
+
+    @Basic(optional = false)
+    @Column(nullable = false)
+    private Double grassiMonoinsaturi;
+
+    public Double getGrassiMonoinsaturi() { return grassiMonoinsaturi; }
+
+    public void setGrassiMonoinsaturi(Double grassiMonoinsaturi) { this.grassiMonoinsaturi = grassiMonoinsaturi; }
+
+    @Basic(optional = false)
+    @Column(nullable = false)
+    private Double grassiTrans;
+
+    public Double getGrassiTrans() { return grassiTrans; }
+
+    public void setGrassiTrans(Double grassiTrans) { this.grassiTrans = grassiTrans; }
+
+    @Basic(optional = false)
+    @Column(nullable = false)
+    private Short colesterolo;
+
+    public Short getColesterolo() { return colesterolo; }
+
+    public void setColesterolo(Short colesterolo) { this.colesterolo = colesterolo; }
+
+    @Basic(optional = false)
+    @Column(nullable = false)
+    private Short sodio;
+
+    public Short getSodio() { return sodio; }
+
+    public void setSodio(Short sodio) { this.sodio = sodio; }
+
+    @Basic(optional = false)
+    @Column(nullable = false)
+    private Short potassio;
+
+    public Short getPotassio() { return potassio; }
+
+    public void setPotassio(Short potassio) { this.potassio = potassio; }
 
     @Basic(optional = false)
     @Column(name="vitamina_a",nullable = false)
-    private double vitaminaA;
+    private Short vitaminaA;
 
-    public double getVitaminaA() { return vitaminaA; }
+    public Short getVitaminaA() { return vitaminaA; }
 
-    public void setVitaminaA(double vitaminaA) { this.vitaminaA = vitaminaA; }
+    public void setVitaminaA(Short vitaminaA) { this.vitaminaA = vitaminaA; }
 
     @Basic(optional = false)
     @Column(name="vitamina_c",nullable = false)
-    private double vitaminaC;
+    private Short vitaminaC;
 
-    public double getVitaminaC() { return vitaminaC; }
+    public Short getVitaminaC() { return vitaminaC; }
 
-    public void setVitaminaC(double vitaminaC) { this.vitaminaC = vitaminaC; }
-
-    @Basic(optional = false)
-    @Column(nullable = false)
-    private double calcio;
-
-    public double getCalcio() { return calcio; }
-
-    public void setCalcio(double calcio) { this.calcio = calcio; }
+    public void setVitaminaC(Short vitaminaC) { this.vitaminaC = vitaminaC; }
 
     @Basic(optional = false)
     @Column(nullable = false)
-    private double ferro;
+    private Short calcio;
 
-    public double getFerro() { return ferro; }
+    public Short getCalcio() { return calcio; }
 
-    public void setFerro(double ferro) { this.ferro = ferro; }
+    public void setCalcio(Short calcio) { this.calcio = calcio; }
+
+    @Basic(optional = false)
+    @Column(nullable = false)
+    private Short ferro;
+
+    public Short getFerro() { return ferro; }
+
+    public void setFerro(Short ferro) { this.ferro = ferro; }
 
 
 }

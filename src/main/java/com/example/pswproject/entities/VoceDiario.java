@@ -3,15 +3,30 @@ package com.example.pswproject.entities;
 import javax.persistence.*;
 
 @Entity
-@Table(name="alimenti")
-public class Alimento {
+@Table(name="voci")
+public class VoceDiario {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(unique = true)
     private Long id;
 
     public Long getId() { return id; }
+
+    @Basic(optional = false)
+    @Column(nullable = false)
+    private Double quantita;
+
+    public Double getQuantita() { return quantita; }
+
+    public void setQuantita(Double quantita) { this.quantita = quantita; }
+
+    @Basic(optional = false)
+    @Column(length = 9, nullable = false)
+    private String pasto;
+
+    public String getPasto() { return pasto; }
+
+    public void setPasto(String pasto) { this.pasto = pasto; }
 
     @Basic(optional = false)
     @Column(length = 64, nullable = false)
@@ -19,15 +34,7 @@ public class Alimento {
 
     public String getNome() { return nome; }
 
-    public void setNome(String nome) { this.nome = nome; }
-
-    @Basic(optional = false)
-    @Column(length = 64, nullable = false)
-    private String descrizione;
-
-    public String getDescrizione(){ return descrizione; }
-
-    public void setDescrizione(String descrizione) { this.descrizione = descrizione; }
+    public void setNome(String nome) { this.nome=nome; }
 
     @Basic(optional = false)
     @Column(nullable = false)

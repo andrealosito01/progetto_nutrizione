@@ -3,9 +3,9 @@ package com.example.pswproject.controllers.rest;
 import com.example.pswproject.entities.Misura;
 import com.example.pswproject.services.MisuraService;
 import com.example.pswproject.support.authentication.Utils;
+import com.example.pswproject.support.exceptions.BadRequestException;
 import com.example.pswproject.support.exceptions.MisuraAlreadyInsertedException;
 import com.example.pswproject.support.exceptions.ResourceNotFoundException;
-import com.example.pswproject.support.exceptions.WeightAlreadyInsertedException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,7 +20,7 @@ import java.util.Collection;
 public class MisuraController {
 
     @Autowired
-    MisuraService misuraService;
+    private MisuraService misuraService;
 
     @PreAuthorize("hasAuthority('paziente')")
     @GetMapping
@@ -39,10 +39,12 @@ public class MisuraController {
         try {
             Misura misuraAggiunta = misuraService.aggiungi(misura, Utils.getUsername());
             return ResponseEntity.ok(misuraAggiunta);
-        } catch (MisuraAlreadyInsertedException e) {
-            throw new ResponseStatusException(HttpStatus.CONFLICT, "Misura di oggi già inserita!", e);
-        } catch (ResourceNotFoundException e) {
+        }catch(MisuraAlreadyInsertedException e){
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Misura già inserita per questa data!", e);
+        }catch(ResourceNotFoundException e){
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Utente non trovato!", e);
+        }catch(BadRequestException e){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"Misura non supportata!",e);
         }
     }
 
@@ -54,6 +56,10 @@ public class MisuraController {
             return ResponseEntity.ok(misuraAggiornata);
         }catch(ResourceNotFoundException e){
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Misura non trovata!", e);
+        }catch(BadRequestException e){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"Misura non supportata!",e);
+        }catch(MisuraAlreadyInsertedException e){
+            throw new ResponseStatusException(HttpStatus.CONFLICT,"Trovata altra misura con stessa data!",e);
         }
     }
 

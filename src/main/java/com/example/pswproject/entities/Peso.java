@@ -1,7 +1,6 @@
 package com.example.pswproject.entities;
 
 import javax.persistence.*;
-import java.math.BigDecimal;
 import java.util.Date;
 
 @Entity
@@ -10,9 +9,9 @@ public class Peso {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private Long id;
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
@@ -31,13 +30,13 @@ public class Peso {
 
     @Basic(optional = false)
     @Column(nullable = false)
-    private double valore;
+    private Double valore;
 
-    public double getValore() {
+    public Double getValore() {
         return valore;
     }
 
-    public void setValore(double valore) {
+    public void setValore(Double valore) {
         this.valore = valore;
     }
 }

@@ -3,6 +3,7 @@ package com.example.pswproject.controllers.rest;
 import com.example.pswproject.entities.Utente;
 import com.example.pswproject.services.UtenteService;
 import com.example.pswproject.support.authentication.Utils;
+import com.example.pswproject.support.exceptions.BadRequestException;
 import com.example.pswproject.support.exceptions.EmailAlreadyExistsException;
 import com.example.pswproject.support.exceptions.ResourceNotFoundException;
 import com.example.pswproject.support.exceptions.UsernameAlreadyExistsException;
@@ -20,7 +21,7 @@ import java.util.Collection;
 public class UtenteController {
 
     @Autowired
-    UtenteService utenteService;
+    private UtenteService utenteService;
 
     @PreAuthorize("hasAuthority('nutrizionista')")
     @GetMapping
@@ -47,6 +48,8 @@ public class UtenteController {
             throw new ResponseStatusException(HttpStatus.CONFLICT, "Username già usato!", e);
         }catch(EmailAlreadyExistsException e){
             throw new ResponseStatusException(HttpStatus.CONFLICT, "Email già usata!", e);
+        }catch(BadRequestException e){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"Utente non supportato!",e);
         }
     }
 
@@ -58,6 +61,8 @@ public class UtenteController {
             return ResponseEntity.ok(utente);
         }catch(ResourceNotFoundException e){
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Utente non trovato!",e);
+        }catch(BadRequestException e){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"Utente non supportato!",e);
         }
     }
 

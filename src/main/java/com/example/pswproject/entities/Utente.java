@@ -11,9 +11,9 @@ public class Utente {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private Long id;
 
-    public long getId(){ return id; }
+    public Long getId(){ return id; }
 
     @Basic(optional = false)
     @Column(length = 20, unique = true, nullable = false)
@@ -130,5 +130,13 @@ public class Utente {
     public List<Alimento> getAlimenti() { return alimenti; }
 
     public void setAlimenti(List<Alimento> alimenti) { this.alimenti = alimenti; }
+
+    @OneToMany(orphanRemoval = true)
+    @JoinColumn(name="utente_id")
+    private List<Diario> diari = new ArrayList<>();
+
+    public List<Diario> getDiari() { return diari; }
+
+    public void setDiari(List<Diario> diari) { this.diari = diari; }
 
 }

@@ -4,6 +4,7 @@ import com.example.pswproject.entities.Peso;
 import com.example.pswproject.entities.Utente;
 import com.example.pswproject.repositories.UtenteRepository;
 import com.example.pswproject.repositories.PesoRepository;
+import com.example.pswproject.support.exceptions.BadRequestException;
 import com.example.pswproject.support.exceptions.ResourceNotFoundException;
 import com.example.pswproject.support.exceptions.WeightAlreadyInsertedException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +25,10 @@ public class PesoService {
     @Autowired
     private PesoRepository pesoRepository;
 
-    public Peso aggiungi(Peso peso, String username) throws WeightAlreadyInsertedException, ResourceNotFoundException {
+    public Peso aggiungi(Peso peso, String username) throws WeightAlreadyInsertedException, ResourceNotFoundException, BadRequestException {
+        if(isNotValid(peso))
+            throw new BadRequestException();
+
         Collection<Peso> pesi = this.getPesi(username);
         // NON devono essere presenti due pesi dello stesso utente nello stesso giorno
         for(Peso p:pesi){
@@ -34,6 +38,10 @@ public class PesoService {
 
         pesi.add(peso);
         return pesoRepository.save(peso);
+    }
+
+    private boolean isNotValid(Peso peso){
+        return peso.getId() != null;
     }
 
     @Transactional(readOnly = true)
@@ -51,7 +59,7 @@ public class PesoService {
         Collection<Peso> pesi = this.getPesi(username);
 
         for(Peso p:pesi){
-            if(p.getId() == id){
+            if(p.getId().equals(id)){
                 pesoRepository.delete(p);
                 return p;
             }

@@ -4,6 +4,7 @@ import com.example.pswproject.entities.Alimento;
 import com.example.pswproject.services.AlimentoService;
 import com.example.pswproject.support.authentication.Utils;
 import com.example.pswproject.support.exceptions.AlimentoAlreadyExistsException;
+import com.example.pswproject.support.exceptions.BadRequestException;
 import com.example.pswproject.support.exceptions.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -19,7 +20,9 @@ import java.util.Collection;
 public class AlimentoController {
 
     @Autowired
-    AlimentoService alimentoService;
+    private AlimentoService alimentoService;
+
+    private final String NUTRIZIONISTA = "mattia";
 
     @PreAuthorize("hasAuthority('paziente')")
     @GetMapping
@@ -33,6 +36,18 @@ public class AlimentoController {
     }
 
     @PreAuthorize("hasAuthority('paziente')")
+    @GetMapping("/nutrizionista")
+    public ResponseEntity<Collection<Alimento>> getAlimentiNutrizionista(){
+        try{
+            Collection<Alimento> alimenti = alimentoService.getAlimenti(NUTRIZIONISTA);
+            return ResponseEntity.ok(alimenti);
+        }catch(ResourceNotFoundException e){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND,"Utente non trovato!",e);
+        }
+    }
+
+
+    @PreAuthorize("hasAuthority('paziente')")
     @PostMapping
     public ResponseEntity<Alimento> addAlimento(@RequestBody Alimento alimento){
         try{
@@ -42,6 +57,8 @@ public class AlimentoController {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND,"Utente non trovato!",e);
         }catch(AlimentoAlreadyExistsException e) {
             throw new ResponseStatusException(HttpStatus.CONFLICT,"Già presente un alimento con questo nome!",e);
+        }catch(BadRequestException e){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"Alimento non supportato!",e);
         }
     }
 
@@ -55,6 +72,8 @@ public class AlimentoController {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND,"Alimento non trovato!",e);
         }catch(AlimentoAlreadyExistsException e) {
             throw new ResponseStatusException(HttpStatus.CONFLICT,"Già presente un altro alimento con questo nome!",e);
+        }catch(BadRequestException e){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"Alimento non supportato!",e);
         }
     }
 

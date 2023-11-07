@@ -2,6 +2,7 @@ package com.example.pswproject.services;
 
 import com.example.pswproject.entities.Utente;
 import com.example.pswproject.repositories.UtenteRepository;
+import com.example.pswproject.support.exceptions.BadRequestException;
 import com.example.pswproject.support.exceptions.EmailAlreadyExistsException;
 import com.example.pswproject.support.exceptions.ResourceNotFoundException;
 import com.example.pswproject.support.exceptions.UsernameAlreadyExistsException;
@@ -18,12 +19,14 @@ import java.util.Optional;
 public class UtenteService {
 
     @Autowired
-    UtenteRepository utenteRepository;
+    private UtenteRepository utenteRepository;
 
     @Autowired
-    AccountsManager accountsManager;
+    private AccountsManager accountsManager;
 
-   public Utente aggiungi(Utente u) throws UsernameAlreadyExistsException, EmailAlreadyExistsException {
+   public Utente aggiungi(Utente u) throws UsernameAlreadyExistsException, EmailAlreadyExistsException, BadRequestException {
+       if(isNotValid(u))
+           throw new BadRequestException();
 
         if(utenteRepository.existsByUsername(u.getUsername()))
             throw new UsernameAlreadyExistsException();
@@ -33,6 +36,11 @@ public class UtenteService {
         accountsManager.registraSuKeycloak(u.getUsername(),u.getEmail(),u.getPassword(),"paziente");
 
         return utenteRepository.save(u);
+    }
+
+    private boolean isNotValid(Utente utente){
+       return (utente.getId() != null)||(utente.getPiano() != null)||(!utente.getPesi().isEmpty())||(!utente.getMisure().isEmpty())
+               ||(!utente.getAlimenti().isEmpty())||(!utente.getDiari().isEmpty());
     }
 
     @Transactional(readOnly = true)
@@ -48,7 +56,9 @@ public class UtenteService {
         return utenteRepository.findAll();
     }
 
-    public Utente modifica(String username, Utente u) throws ResourceNotFoundException{
+    public Utente modifica(String username, Utente u) throws ResourceNotFoundException, BadRequestException {
+       if(isNotValid(u))
+           throw new BadRequestException();
         Optional<Utente> opUtente = utenteRepository.findByUsername(username);
         if(opUtente.isEmpty()) {
             // ovviamente ci aspettiamo di non entrare mai in questo blocco

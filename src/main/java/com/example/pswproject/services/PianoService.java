@@ -4,6 +4,7 @@ import com.example.pswproject.entities.Piano;
 import com.example.pswproject.entities.Utente;
 import com.example.pswproject.repositories.PianoRepository;
 import com.example.pswproject.repositories.UtenteRepository;
+import com.example.pswproject.support.exceptions.BadRequestException;
 import com.example.pswproject.support.exceptions.PianoAlreadyExistsException;
 import com.example.pswproject.support.exceptions.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,10 +18,10 @@ import java.util.Optional;
 public class PianoService {
 
     @Autowired
-    UtenteRepository utenteRepository;
+    private UtenteRepository utenteRepository;
 
     @Autowired
-    PianoRepository pianoRepository;
+    private PianoRepository pianoRepository;
 
     @Transactional(readOnly = true)
     public Piano getPiano(String username) throws ResourceNotFoundException {
@@ -32,7 +33,10 @@ public class PianoService {
         return utente.getPiano();
     }
 
-    public Piano aggiungi(String username, Piano piano) throws PianoAlreadyExistsException, ResourceNotFoundException {
+    public Piano aggiungi(String username, Piano piano) throws PianoAlreadyExistsException, ResourceNotFoundException, BadRequestException {
+        if(isNotValid(piano))
+            throw new BadRequestException();
+
         // non uso this.getPiano(username) perchè mi serve l'utente per chiamare setPiano(piano)
         Optional<Utente> opUtente = utenteRepository.findByUsername(username);
         if(opUtente.isEmpty())
@@ -46,7 +50,14 @@ public class PianoService {
         return pianoRepository.save(piano);
     }
 
-    public Piano modifica(String username, Piano piano) throws ResourceNotFoundException {
+    private boolean isNotValid(Piano piano){
+        return piano.getId() != null;
+    }
+
+    public Piano modifica(String username, Piano piano) throws ResourceNotFoundException, BadRequestException {
+        if(isNotValid(piano))
+            throw new BadRequestException();
+
         Optional<Utente> opUtente = utenteRepository.findByUsername(username);
         if(opUtente.isEmpty())
             throw new ResourceNotFoundException();
