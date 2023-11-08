@@ -42,7 +42,7 @@ public class Diario {
 
     public void setPassi(Integer passi) { this.passi = passi; }
 
-    @OneToMany
+    @OneToMany(fetch = FetchType.EAGER)
     @JoinColumn(name="diario_id")
     private List<VoceDiario> vociDiario = new ArrayList<>();
 

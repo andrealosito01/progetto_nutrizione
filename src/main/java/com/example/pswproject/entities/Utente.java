@@ -139,4 +139,12 @@ public class Utente {
 
     public void setDiari(List<Diario> diari) { this.diari = diari; }
 
+    @OneToMany(orphanRemoval = true)
+    @JoinColumn(name = "utente_id")
+    private List<Scheda> schede = new ArrayList<>();
+
+    public List<Scheda> getSchede() { return schede; }
+
+    public void setSchede(List<Scheda> schede) { this.schede = schede; }
+
 }

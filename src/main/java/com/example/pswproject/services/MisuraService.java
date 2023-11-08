@@ -3,7 +3,6 @@ package com.example.pswproject.services;
 import com.example.pswproject.entities.Misura;
 import com.example.pswproject.entities.Utente;
 import com.example.pswproject.repositories.MisuraRepository;
-import com.example.pswproject.repositories.UtenteRepository;
 import com.example.pswproject.support.exceptions.BadRequestException;
 import com.example.pswproject.support.exceptions.MisuraAlreadyInsertedException;
 import com.example.pswproject.support.exceptions.ResourceNotFoundException;
@@ -12,25 +11,20 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collection;
-import java.util.Optional;
 
 @Service
 @Transactional
 public class MisuraService {
 
     @Autowired
-    private UtenteRepository utenteRepository;
+    private UtenteService utenteService;
 
     @Autowired
     private MisuraRepository misuraRepository;
 
     @Transactional(readOnly = true)
     public Collection<Misura> getMisure(String username) throws ResourceNotFoundException{
-        Optional<Utente> opUtente = utenteRepository.findByUsername(username);
-        if(opUtente.isEmpty())
-            throw new ResourceNotFoundException();
-
-        Utente utente = opUtente.get();
+        Utente utente = utenteService.getUtente(username);
         return utente.getMisure();
     }
 

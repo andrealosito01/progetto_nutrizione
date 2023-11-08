@@ -21,7 +21,7 @@ public class VoceDiarioController {
     private VoceDiarioService voceDiarioService;
 
     @GetMapping("/{idDiario}")
-    public ResponseEntity<Collection<VoceDiario>> getVociDiario(@PathVariable long idDiario){
+    public ResponseEntity<Collection<VoceDiario>> getVociDiario(@PathVariable long idDiario){   // NON USATO
         try{
             Collection<VoceDiario> vociDiario = voceDiarioService.getVociDiario(Utils.getUsername(),idDiario);
             return ResponseEntity.ok(vociDiario);

@@ -2,7 +2,6 @@ package com.example.pswproject.services;
 
 import com.example.pswproject.entities.Peso;
 import com.example.pswproject.entities.Utente;
-import com.example.pswproject.repositories.UtenteRepository;
 import com.example.pswproject.repositories.PesoRepository;
 import com.example.pswproject.support.exceptions.BadRequestException;
 import com.example.pswproject.support.exceptions.ResourceNotFoundException;
@@ -12,15 +11,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collection;
-import java.util.List;
-import java.util.Optional;
 
 @Service
 @Transactional
 public class PesoService {
 
     @Autowired
-    private UtenteRepository utenteRepository;
+    private UtenteService utenteService;
 
     @Autowired
     private PesoRepository pesoRepository;
@@ -46,11 +43,7 @@ public class PesoService {
 
     @Transactional(readOnly = true)
     public Collection<Peso> getPesi(String username) throws ResourceNotFoundException {
-        Optional<Utente> opUtente = utenteRepository.findByUsername(username);
-        if(opUtente.isEmpty())
-            throw new ResourceNotFoundException();
-
-        Utente utente = opUtente.get();
+        Utente utente = utenteService.getUtente(username);
         return utente.getPesi();
     }
 

@@ -3,7 +3,6 @@ package com.example.pswproject.services;
 import com.example.pswproject.entities.Alimento;
 import com.example.pswproject.entities.Utente;
 import com.example.pswproject.repositories.AlimentoRepository;
-import com.example.pswproject.repositories.UtenteRepository;
 import com.example.pswproject.support.exceptions.AlimentoAlreadyExistsException;
 import com.example.pswproject.support.exceptions.BadRequestException;
 import com.example.pswproject.support.exceptions.ResourceNotFoundException;
@@ -12,25 +11,20 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collection;
-import java.util.Optional;
 
 @Service
 @Transactional
 public class AlimentoService {
 
     @Autowired
-    private UtenteRepository utenteRepository;
+    private UtenteService utenteService;
 
     @Autowired
     private AlimentoRepository alimentoRepository;
 
     @Transactional(readOnly = true)
     public Collection<Alimento> getAlimenti(String username) throws ResourceNotFoundException {
-        Optional<Utente> opUtente = utenteRepository.findByUsername(username);
-        if(opUtente.isEmpty())
-            throw new ResourceNotFoundException();
-
-        Utente utente = opUtente.get();
+        Utente utente = utenteService.getUtente(username);
         return utente.getAlimenti();
     }
 

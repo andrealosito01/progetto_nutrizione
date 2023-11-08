@@ -18,18 +18,14 @@ import java.util.Optional;
 public class PianoService {
 
     @Autowired
-    private UtenteRepository utenteRepository;
+    private UtenteService utenteService;
 
     @Autowired
     private PianoRepository pianoRepository;
 
     @Transactional(readOnly = true)
     public Piano getPiano(String username) throws ResourceNotFoundException {
-        Optional<Utente> opUtente = utenteRepository.findByUsername(username);
-        if(opUtente.isEmpty())
-            throw new ResourceNotFoundException();
-
-        Utente utente = opUtente.get();
+        Utente utente = utenteService.getUtente(username);
         return utente.getPiano();
     }
 
@@ -38,11 +34,7 @@ public class PianoService {
             throw new BadRequestException();
 
         // non uso this.getPiano(username) perchè mi serve l'utente per chiamare setPiano(piano)
-        Optional<Utente> opUtente = utenteRepository.findByUsername(username);
-        if(opUtente.isEmpty())
-            throw new ResourceNotFoundException();
-
-        Utente utente = opUtente.get();
+        Utente utente = utenteService.getUtente(username);
         if(utente.getPiano() != null)
             throw new PianoAlreadyExistsException();
 
@@ -58,11 +50,7 @@ public class PianoService {
         if(isNotValid(piano))
             throw new BadRequestException();
 
-        Optional<Utente> opUtente = utenteRepository.findByUsername(username);
-        if(opUtente.isEmpty())
-            throw new ResourceNotFoundException();
-
-        Utente utente = opUtente.get();
+        Utente utente = utenteService.getUtente(username);
         pianoRepository.delete(utente.getPiano());
         utente.setPiano(piano);
 
@@ -70,11 +58,7 @@ public class PianoService {
     }
 
     public Piano rimuovi(String username) throws ResourceNotFoundException {
-        Optional<Utente> opUtente = utenteRepository.findByUsername(username);
-        if(opUtente.isEmpty())
-            throw new ResourceNotFoundException();
-
-        Utente utente = opUtente.get();
+        Utente utente = utenteService.getUtente(username);
         Piano piano = utente.getPiano();
         if(piano == null)
             throw new ResourceNotFoundException();
