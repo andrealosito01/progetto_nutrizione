@@ -35,13 +35,6 @@ public class Diario {
 
     public void setAcqua(Double acqua) { this.acqua = acqua; }
 
-    @Basic
-    private Integer passi = 0;
-
-    public Integer getPassi() { return passi; }
-
-    public void setPassi(Integer passi) { this.passi = passi; }
-
     @OneToMany(fetch = FetchType.EAGER)
     @JoinColumn(name="diario_id")
     private List<VoceDiario> vociDiario = new ArrayList<>();

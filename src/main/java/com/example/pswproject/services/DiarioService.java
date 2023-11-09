@@ -53,7 +53,6 @@ public class DiarioService {
         for(Diario d:diari)
             if(d.getId().equals(id)){
                 d.setAcqua(diario.getAcqua());
-                d.setPassi(diario.getPassi());
                 return d;
             }
 

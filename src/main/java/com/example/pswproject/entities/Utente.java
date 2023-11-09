@@ -117,6 +117,14 @@ public class Utente {
 
     @OneToMany(orphanRemoval = true)
     @JoinColumn(name = "utente_id")
+    private List<Passi> passi = new ArrayList<>();
+
+    public List<Passi> getPassi() { return passi; }
+
+    public void setPassi(List<Passi> passi) { this.passi = passi; }
+
+    @OneToMany(orphanRemoval = true)
+    @JoinColumn(name = "utente_id")
     private List<Misura> misure = new ArrayList<>();
 
     public List<Misura> getMisure() { return misure; }
