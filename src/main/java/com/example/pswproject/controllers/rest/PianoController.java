@@ -1,7 +1,9 @@
 package com.example.pswproject.controllers.rest;
 
 import com.example.pswproject.entities.Piano;
+import com.example.pswproject.entities.Utente;
 import com.example.pswproject.services.PianoService;
+import com.example.pswproject.services.UtenteService;
 import com.example.pswproject.support.authentication.Utils;
 import com.example.pswproject.support.exceptions.BadRequestException;
 import com.example.pswproject.support.exceptions.PianoAlreadyExistsException;
@@ -18,6 +20,9 @@ import org.springframework.web.server.ResponseStatusException;
 public class PianoController {
 
     @Autowired
+    private UtenteService utenteService;
+
+    @Autowired
     private PianoService pianoService;
 
     @PreAuthorize("hasAuthority('paziente')")
@@ -32,10 +37,11 @@ public class PianoController {
     }
 
     @PreAuthorize("hasAuthority('nutrizionista')")
-    @PostMapping("/{username}")
-    public ResponseEntity<Piano> addPiano(@PathVariable String username, @RequestBody Piano piano){
+    @PostMapping("/{idUtente}")
+    public ResponseEntity<Piano> addPiano(@PathVariable Long idUtente, @RequestBody Piano piano){
         try{
-            Piano pianoAggiunto = pianoService.aggiungi(username,piano);
+            Utente utente = utenteService.getUtenteById(idUtente);
+            Piano pianoAggiunto = pianoService.aggiungi(utente.getUsername(),piano);
             return ResponseEntity.ok(pianoAggiunto);
         }catch(ResourceNotFoundException e){
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Utente non trovato!",e);
@@ -47,10 +53,11 @@ public class PianoController {
     }
 
     @PreAuthorize("hasAuthority('nutrizionista')")
-    @PutMapping("/{username}")
-    public ResponseEntity<Piano> updatePiano(@PathVariable String username, @RequestBody Piano piano){
+    @PutMapping("/{idUtente}")
+    public ResponseEntity<Piano> updatePiano(@PathVariable Long idUtente, @RequestBody Piano piano){
         try{
-            Piano pianoAggiornato = pianoService.modifica(username, piano);
+            Utente utente = utenteService.getUtenteById(idUtente);
+            Piano pianoAggiornato = pianoService.modifica(utente.getUsername(), piano);
             return ResponseEntity.ok(pianoAggiornato);
         }catch(ResourceNotFoundException e){
             throw new ResponseStatusException(HttpStatus.NOT_FOUND,"Piano non trovato!",e);
@@ -60,10 +67,11 @@ public class PianoController {
     }
 
     @PreAuthorize("hasAuthority('nutrizionista')")
-    @DeleteMapping("/{username}")
-    public ResponseEntity<Piano> deletePiano(@PathVariable String username){
+    @DeleteMapping("/{idUtente}")
+    public ResponseEntity<Piano> deletePiano(@PathVariable Long idUtente){
         try{
-            Piano pianoRimosso = pianoService.rimuovi(username);
+            Utente utente = utenteService.getUtenteById(idUtente);
+            Piano pianoRimosso = pianoService.rimuovi(utente.getUsername());
             return ResponseEntity.ok(pianoRimosso);
         }catch(ResourceNotFoundException e){
             throw new ResponseStatusException(HttpStatus.NOT_FOUND,"Piano non trovato!",e);

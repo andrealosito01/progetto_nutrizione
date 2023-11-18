@@ -52,6 +52,14 @@ public class UtenteService {
     }
 
     @Transactional(readOnly = true)
+    public Utente getUtenteById(Long id) throws ResourceNotFoundException {
+       Optional<Utente> opUtente = utenteRepository.findById(id);
+       if(opUtente.isEmpty())
+           throw new ResourceNotFoundException();
+       return opUtente.get();
+    }
+
+    @Transactional(readOnly = true)
     public Collection<Utente> getUtenti(){
         return utenteRepository.findAll();
     }

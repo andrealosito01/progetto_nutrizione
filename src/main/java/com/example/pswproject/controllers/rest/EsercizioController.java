@@ -1,7 +1,9 @@
 package com.example.pswproject.controllers.rest;
 
 import com.example.pswproject.entities.Esercizio;
+import com.example.pswproject.entities.Utente;
 import com.example.pswproject.services.EsercizioService;
+import com.example.pswproject.services.UtenteService;
 import com.example.pswproject.support.authentication.Utils;
 import com.example.pswproject.support.exceptions.BadRequestException;
 import com.example.pswproject.support.exceptions.ResourceNotFoundException;
@@ -12,12 +14,14 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
-import javax.ws.rs.Path;
 import java.util.Collection;
 
 @RestController
 @RequestMapping("/esercizio")
 public class EsercizioController {
+
+    @Autowired
+    private UtenteService utenteService;
 
     @Autowired
     private EsercizioService esercizioService;
@@ -34,10 +38,11 @@ public class EsercizioController {
     }
 
     @PreAuthorize("hasAuthority('nutrizionista')")
-    @PostMapping("/{username}/{idScheda}")
-    public ResponseEntity<Esercizio> addEsercizio(@PathVariable String username, @PathVariable Long idScheda, @RequestBody Esercizio esercizio){
+    @PostMapping("/{idUtente}/{idScheda}")
+    public ResponseEntity<Esercizio> addEsercizio(@PathVariable Long idUtente, @PathVariable Long idScheda, @RequestBody Esercizio esercizio){
         try{
-            Esercizio esercizioAggiunto = esercizioService.aggiungi(username,idScheda,esercizio);
+            Utente utente = utenteService.getUtenteById(idUtente);
+            Esercizio esercizioAggiunto = esercizioService.aggiungi(utente.getUsername(),idScheda,esercizio);
             return ResponseEntity.ok(esercizioAggiunto);
         }catch(ResourceNotFoundException e){
             throw new ResponseStatusException(HttpStatus.NOT_FOUND,"Diario non trovato!",e);
@@ -47,10 +52,11 @@ public class EsercizioController {
     }
 
     @PreAuthorize("hasAuthority('nutrizionista')")
-    @PutMapping("/{username}/{idScheda}/{id}")
-    public ResponseEntity<Esercizio> updateEsercizio(@PathVariable String username, @PathVariable Long idScheda, @PathVariable Long id, @RequestBody Esercizio esercizio){
+    @PutMapping("/{idUtente}/{idScheda}/{id}")
+    public ResponseEntity<Esercizio> updateEsercizio(@PathVariable Long idUtente, @PathVariable Long idScheda, @PathVariable Long id, @RequestBody Esercizio esercizio){
         try{
-            Esercizio esercizioAggiornato = esercizioService.modifica(username, idScheda, id, esercizio);
+            Utente utente = utenteService.getUtenteById(idUtente);
+            Esercizio esercizioAggiornato = esercizioService.modifica(utente.getUsername(), idScheda, id, esercizio);
             return ResponseEntity.ok(esercizioAggiornato);
         }catch(ResourceNotFoundException e){
             throw new ResponseStatusException(HttpStatus.NOT_FOUND,"Esercizio non trovato!",e);
@@ -60,10 +66,11 @@ public class EsercizioController {
     }
 
     @PreAuthorize("hasAuthority('nutrizionista')")
-    @DeleteMapping("/{username}/{idScheda}/{id}")
-    public ResponseEntity<Esercizio> deleteEsercizio(@PathVariable String username,@PathVariable Long idScheda, @PathVariable Long id){
+    @DeleteMapping("/{idUtente}/{idScheda}/{id}")
+    public ResponseEntity<Esercizio> deleteEsercizio(@PathVariable Long idUtente,@PathVariable Long idScheda, @PathVariable Long id){
         try{
-            Esercizio esercizioRimosso = esercizioService.rimuovi(username, idScheda, id);
+            Utente utente = utenteService.getUtenteById(idUtente);
+            Esercizio esercizioRimosso = esercizioService.rimuovi(utente.getUsername(), idScheda, id);
             return ResponseEntity.ok(esercizioRimosso);
         }catch(ResourceNotFoundException e){
             throw new ResponseStatusException(HttpStatus.NOT_FOUND,"Esercizio non trovato!",e);

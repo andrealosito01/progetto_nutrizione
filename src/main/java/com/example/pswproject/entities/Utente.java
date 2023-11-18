@@ -1,5 +1,7 @@
 package com.example.pswproject.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.Date;
@@ -96,6 +98,7 @@ public class Utente {
 
     @OneToOne(orphanRemoval = true)
     @JoinColumn(name="piano_id")
+    @JsonIgnore
     private Piano piano;
 
     public Piano getPiano() { return piano; }
@@ -105,6 +108,8 @@ public class Utente {
 
     @OneToMany(orphanRemoval = true)
     @JoinColumn(name = "utente_id")
+    @OrderBy("data DESC")
+    @JsonIgnore
     private List<Peso> pesi = new ArrayList<>();
 
     public List<Peso> getPesi() {
@@ -117,6 +122,7 @@ public class Utente {
 
     @OneToMany(orphanRemoval = true)
     @JoinColumn(name = "utente_id")
+    @JsonIgnore
     private List<Passi> passi = new ArrayList<>();
 
     public List<Passi> getPassi() { return passi; }
@@ -125,6 +131,7 @@ public class Utente {
 
     @OneToMany(orphanRemoval = true)
     @JoinColumn(name = "utente_id")
+    @JsonIgnore
     private List<Misura> misure = new ArrayList<>();
 
     public List<Misura> getMisure() { return misure; }
@@ -133,6 +140,7 @@ public class Utente {
 
     @OneToMany(orphanRemoval = true)
     @JoinColumn(name = "utente_id")
+    @JsonIgnore
     private List<Alimento> alimenti = new ArrayList<>();
 
     public List<Alimento> getAlimenti() { return alimenti; }
@@ -141,6 +149,7 @@ public class Utente {
 
     @OneToMany(orphanRemoval = true)
     @JoinColumn(name="utente_id")
+    @JsonIgnore
     private List<Diario> diari = new ArrayList<>();
 
     public List<Diario> getDiari() { return diari; }
@@ -149,6 +158,7 @@ public class Utente {
 
     @OneToMany(orphanRemoval = true)
     @JoinColumn(name = "utente_id")
+    @JsonIgnore
     private List<Scheda> schede = new ArrayList<>();
 
     public List<Scheda> getSchede() { return schede; }

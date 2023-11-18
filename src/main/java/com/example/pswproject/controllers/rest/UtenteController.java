@@ -24,16 +24,16 @@ public class UtenteController {
     private UtenteService utenteService;
 
     @PreAuthorize("hasAuthority('nutrizionista')")
-    @GetMapping
+    @GetMapping("/all")
     public ResponseEntity<Collection<Utente>> getUtenti(){
         return ResponseEntity.ok(utenteService.getUtenti());
     }
 
-    @PreAuthorize("(hasAuthority('paziente') and #username == T(com.example.pswproject.support.authentication.Utils).getUsername()) or hasAuthority('nutrizionista')")
-    @GetMapping("/{username}")
-    public ResponseEntity<Utente> getUtente(@PathVariable String username){
+    @PreAuthorize("hasAuthority('paziente')")
+    @GetMapping
+    public ResponseEntity<Utente> getUtente(){
         try {
-            return ResponseEntity.ok(utenteService.getUtente(username));
+            return ResponseEntity.ok(utenteService.getUtente(Utils.getUsername()));
         }catch(ResourceNotFoundException e){
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Utente non trovato!", e);
         }

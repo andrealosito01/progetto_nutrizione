@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.Collection;
+import java.util.Date;
 
 @RestController
 @RequestMapping("/diario")
@@ -30,6 +31,18 @@ public class DiarioController {
             return ResponseEntity.ok(diari);
         }catch(ResourceNotFoundException e){
             throw new ResponseStatusException(HttpStatus.NOT_FOUND,"Utente non trovato!",e);
+        }
+    }
+
+    @PreAuthorize("hasAuthority('paziente')")
+    @GetMapping("/{giorno}")
+    public ResponseEntity<Diario> getDiario(@PathVariable Long giorno){
+        try{
+            Date oggi = new Date(giorno);
+            Diario diario = diarioService.getDiario(Utils.getUsername(),oggi);
+            return ResponseEntity.ok(diario);
+        }catch(ResourceNotFoundException e){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND,"Diario non trovato!",e);
         }
     }
 

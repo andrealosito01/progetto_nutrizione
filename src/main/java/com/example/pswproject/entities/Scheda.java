@@ -22,6 +22,14 @@ public class Scheda {
 
     public void setNome(String nome) { this.nome = nome; }
 
+    @Basic
+    @Column(length = 128)
+    private String descrizione;
+
+    public String getDescrizione() { return descrizione; }
+
+    public void setDescrizione(String descrizione) { this.descrizione = descrizione; }
+
     @Basic(optional = false)
     @Column(nullable = false)
     private boolean attiva = false;

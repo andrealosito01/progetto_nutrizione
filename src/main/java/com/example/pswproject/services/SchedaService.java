@@ -50,6 +50,7 @@ public class SchedaService {
             if(s.getId().equals(id)){
                 s.setAttiva(scheda.isAttiva());
                 s.setNome(scheda.getNome());
+                s.setDescrizione(scheda.getDescrizione());
                 return s;
             }
 

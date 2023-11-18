@@ -52,7 +52,7 @@ public class AlimentoController {
     public ResponseEntity<Alimento> addAlimento(@RequestBody Alimento alimento){
         try{
             Alimento alimentoAggiunto = alimentoService.aggiungi(Utils.getUsername(),alimento);
-            return ResponseEntity.ok(alimento);
+            return ResponseEntity.ok(alimentoAggiunto);
         }catch(ResourceNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND,"Utente non trovato!",e);
         }catch(AlimentoAlreadyExistsException e) {

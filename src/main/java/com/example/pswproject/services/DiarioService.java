@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collection;
+import java.util.Date;
 
 @Service
 @Transactional
@@ -27,6 +28,15 @@ public class DiarioService {
         Utente utente = utenteService.getUtente(username);
         return utente.getDiari();
     }
+
+    public Diario getDiario(String username, Date giorno) throws ResourceNotFoundException{
+        Collection<Diario> diari = this.getDiari(username);
+        for(Diario diario:diari)
+            if(diario.getGiorno().equals(giorno))
+                return diario;
+        throw new ResourceNotFoundException();
+    }
+
 
     public Diario aggiungi(String username, Diario diario) throws ResourceNotFoundException, DiarioAlreadyExistsException, BadRequestException {
         if(isNotValid(diario))

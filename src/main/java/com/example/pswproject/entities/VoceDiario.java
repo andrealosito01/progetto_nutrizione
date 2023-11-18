@@ -36,6 +36,14 @@ public class VoceDiario {
 
     public void setNome(String nome) { this.nome=nome; }
 
+    @Basic
+    @Column(length = 64)
+    private String descrizione;
+
+    public String getDescrizione() {return descrizione;}
+
+    public void setDescrizione(String descrizione) { this.descrizione = descrizione;}
+
     @Basic(optional = false)
     @Column(nullable = false)
     private Short energia;
