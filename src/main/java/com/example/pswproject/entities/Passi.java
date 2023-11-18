@@ -39,4 +39,12 @@ public class Passi {
         this.valore = valore;
     }
 
+    @ManyToOne
+    @JoinColumn(name="utente_id")
+    private Utente utente;
+
+    public Utente getUtente() { return utente; }
+
+    public void setUtente(Utente utente) { this.utente = utente; }
+
 }

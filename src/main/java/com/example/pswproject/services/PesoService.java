@@ -7,6 +7,10 @@ import com.example.pswproject.support.exceptions.BadRequestException;
 import com.example.pswproject.support.exceptions.ResourceNotFoundException;
 import com.example.pswproject.support.exceptions.WeightAlreadyInsertedException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -60,4 +64,11 @@ public class PesoService {
 
         throw new ResourceNotFoundException();
     }
+
+    public Page<Peso> getPaginePesiOrdinatiPerData(String username, Integer page, Integer size) throws ResourceNotFoundException {
+        Pageable pageable = PageRequest.of(page, size, Sort.by("data").descending());
+        Utente utente = utenteService.getUtente(username);
+        return pesoRepository.findAllByUtente(utente, pageable);
+    }
+
 }

@@ -1,12 +1,14 @@
 package com.example.pswproject.controllers.rest;
 
 import com.example.pswproject.entities.Misura;
+import com.example.pswproject.entities.Peso;
 import com.example.pswproject.services.MisuraService;
 import com.example.pswproject.support.authentication.Utils;
 import com.example.pswproject.support.exceptions.BadRequestException;
 import com.example.pswproject.support.exceptions.MisuraAlreadyInsertedException;
 import com.example.pswproject.support.exceptions.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -24,12 +26,12 @@ public class MisuraController {
 
     @PreAuthorize("hasAuthority('paziente')")
     @GetMapping
-    public ResponseEntity<Collection<Misura>> getMisure(){  // NON USATO
+    public ResponseEntity<Page<Misura>> getPagineMisure(@RequestParam("page") Integer page, @RequestParam("size") Integer size) {
         try {
-            Collection<Misura> misure = misuraService.getMisure(Utils.getUsername());
+            Page<Misura> misure = misuraService.getPagineMisureOrdinatePerData(Utils.getUsername(),page,size);
             return ResponseEntity.ok(misure);
-        }catch(ResourceNotFoundException e){
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Utente non trovato!", e);
+        } catch (ResourceNotFoundException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Misure non trovate!", e);
         }
     }
 

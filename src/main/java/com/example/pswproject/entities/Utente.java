@@ -106,8 +106,7 @@ public class Utente {
     public void setPiano(Piano piano) { this.piano = piano; }
 
 
-    @OneToMany(orphanRemoval = true)
-    @JoinColumn(name = "utente_id")
+    @OneToMany(orphanRemoval = true, mappedBy = "utente")
     @OrderBy("data DESC")
     @JsonIgnore
     private List<Peso> pesi = new ArrayList<>();
@@ -120,8 +119,7 @@ public class Utente {
         this.pesi = pesi;
     }
 
-    @OneToMany(orphanRemoval = true)
-    @JoinColumn(name = "utente_id")
+    @OneToMany(orphanRemoval = true, mappedBy = "utente")
     @JsonIgnore
     private List<Passi> passi = new ArrayList<>();
 
@@ -129,8 +127,7 @@ public class Utente {
 
     public void setPassi(List<Passi> passi) { this.passi = passi; }
 
-    @OneToMany(orphanRemoval = true)
-    @JoinColumn(name = "utente_id")
+    @OneToMany(orphanRemoval = true, mappedBy = "utente")
     @JsonIgnore
     private List<Misura> misure = new ArrayList<>();
 

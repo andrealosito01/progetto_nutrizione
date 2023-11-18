@@ -39,4 +39,12 @@ public class Peso {
     public void setValore(Double valore) {
         this.valore = valore;
     }
+
+    @ManyToOne
+    @JoinColumn(name="utente_id")
+    private Utente utente;
+
+    public Utente getUtente() { return utente; }
+
+    public void setUtente(Utente utente) { this.utente = utente; }
 }

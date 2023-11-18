@@ -1,12 +1,17 @@
 package com.example.pswproject.services;
 
 import com.example.pswproject.entities.Misura;
+import com.example.pswproject.entities.Peso;
 import com.example.pswproject.entities.Utente;
 import com.example.pswproject.repositories.MisuraRepository;
 import com.example.pswproject.support.exceptions.BadRequestException;
 import com.example.pswproject.support.exceptions.MisuraAlreadyInsertedException;
 import com.example.pswproject.support.exceptions.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -83,5 +88,11 @@ public class MisuraService {
         }
 
         throw new ResourceNotFoundException();
+    }
+
+    public Page<Misura> getPagineMisureOrdinatePerData(String username, Integer page, Integer size) throws ResourceNotFoundException {
+        Pageable pageable = PageRequest.of(page, size, Sort.by("data").descending());
+        Utente utente = utenteService.getUtente(username);
+        return misuraRepository.findAllByUtente(utente, pageable);
     }
 }

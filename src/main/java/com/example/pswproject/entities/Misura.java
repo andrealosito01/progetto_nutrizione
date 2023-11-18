@@ -82,4 +82,12 @@ public class Misura {
 
     public void setGambaSx(Short gambaSx) { this.gambaSx = gambaSx; }
 
+    @ManyToOne
+    @JoinColumn(name="utente_id")
+    private Utente utente;
+
+    public Utente getUtente() { return utente; }
+
+    public void setUtente(Utente utente) { this.utente = utente; }
+
 }
