@@ -1,7 +1,6 @@
 package com.example.pswproject.services;
 
 import com.example.pswproject.entities.Misura;
-import com.example.pswproject.entities.Peso;
 import com.example.pswproject.entities.Utente;
 import com.example.pswproject.repositories.MisuraRepository;
 import com.example.pswproject.support.exceptions.BadRequestException;
@@ -16,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collection;
+import java.util.Optional;
 
 @Service
 @Transactional
@@ -37,13 +37,12 @@ public class MisuraService {
         if(isNotValid(misura))
             throw new BadRequestException();
 
-        Collection<Misura> misure = this.getMisure(username);
+        Utente utente = utenteService.getUtente(username);
         // NON devono essere presenti due misure dello stesso utente nello stesso giorno
-        for(Misura m:misure)
-            if(misura.getData().equals(m.getData()))
-                throw new MisuraAlreadyInsertedException();
+        if(misuraRepository.existsByDataAndUtente(misura.getData(),utente))
+            throw new MisuraAlreadyInsertedException();
 
-        misure.add(misura);
+        misura.setUtente(utente);
         return misuraRepository.save(misura);
     }
 
@@ -56,24 +55,19 @@ public class MisuraService {
             throw new BadRequestException();
 
         // con l'username garantisco che ognuno possa modificare solo una propria misura
-        Collection<Misura> misure = this.getMisure(username);
+        Utente utente = utenteService.getUtente(username);
+        Optional<Misura> misuraStessaDataDiversoId = misuraRepository.findByIdNotAndUtenteAndData(id,utente,misura.getData());
+        if(misuraStessaDataDiversoId.isPresent())
+            throw new MisuraAlreadyInsertedException();
 
-        for(Misura m:misure)
-            if(misura.getData().equals(m.getData()) && !id.equals(m.getId()))
-                throw new MisuraAlreadyInsertedException();
-
-        boolean trovato = false;
-        for(Misura m:misure){
-            if(m.getId().equals(id)){
-                misuraRepository.delete(m);
-                trovato = true;
-            }
-        }
-        if(trovato) {
-            misure.add(misura);
+        Optional<Misura> misuraDaRimuovere = misuraRepository.findByIdAndUtente(id,utente);
+        if(misuraDaRimuovere.isPresent()){
+            misuraRepository.delete(misuraDaRimuovere.get());
+            misura.setUtente(utente);
             return misuraRepository.save(misura);
-        }else
-            throw new ResourceNotFoundException();
+        }
+
+        throw new ResourceNotFoundException();
     }
 
     public Misura rimuovi(Long id, String username) throws ResourceNotFoundException{

@@ -1,5 +1,7 @@
 package com.example.pswproject.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.util.Date;
 
@@ -42,9 +44,14 @@ public class Peso {
 
     @ManyToOne
     @JoinColumn(name="utente_id")
+    @JsonIgnore
     private Utente utente;
 
     public Utente getUtente() { return utente; }
 
     public void setUtente(Utente utente) { this.utente = utente; }
+
+    public String toString(){
+        return "Peso[" + this.data +","+this.valore+"]";
+    }
 }

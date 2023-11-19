@@ -43,8 +43,4 @@ public class Diario {
 
     public void setVociDiario(List<VoceDiario> vociDiario) { this.vociDiario = vociDiario; }
 
-    public Diario() {}
-
-    public Diario(Date giorno) {this.giorno = giorno;}
-
 }

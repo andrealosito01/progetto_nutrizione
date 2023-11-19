@@ -10,8 +10,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.text.SimpleDateFormat;
 import java.util.Collection;
 import java.util.Date;
+import java.util.Locale;
 
 @Service
 @Transactional
@@ -42,9 +44,10 @@ public class DiarioService {
         if(isNotValid(diario))
             throw new BadRequestException();
 
+        String dataFormattata = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH).format(diario.getGiorno());
         Collection<Diario> diari = this.getDiari(username);
         for(Diario d:diari)
-            if(d.getGiorno().equals(diario.getGiorno()))
+            if(d.getGiorno().toString().equals(dataFormattata))
                 throw new DiarioAlreadyExistsException();
 
         diari.add(diario);

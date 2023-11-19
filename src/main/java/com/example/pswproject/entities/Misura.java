@@ -1,5 +1,7 @@
 package com.example.pswproject.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.util.Date;
 
@@ -84,6 +86,7 @@ public class Misura {
 
     @ManyToOne
     @JoinColumn(name="utente_id")
+    @JsonIgnore
     private Utente utente;
 
     public Utente getUtente() { return utente; }

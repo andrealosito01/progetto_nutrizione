@@ -7,7 +7,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.Date;
+
 @Repository
 public interface PesoRepository extends JpaRepository<Peso,Long> {
     Page<Peso> findAllByUtente(Utente utente, Pageable pageable);
+    boolean existsByDataAndUtente(Date data, Utente utente);
 }

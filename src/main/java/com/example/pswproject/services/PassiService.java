@@ -1,7 +1,6 @@
 package com.example.pswproject.services;
 
 import com.example.pswproject.entities.Passi;
-import com.example.pswproject.entities.Peso;
 import com.example.pswproject.entities.Utente;
 import com.example.pswproject.repositories.PassiRepository;
 import com.example.pswproject.support.exceptions.BadRequestException;
@@ -37,12 +36,11 @@ public class PassiService {
         if(isNotValid(passi))
             throw new BadRequestException();
 
-        Collection<Passi> listaPassi = this.getPassi(username);
-        for(Passi p:listaPassi)
-            if(p.getData().equals(passi.getData()))
+        Utente utente = utenteService.getUtente(username);
+        if(passiRepository.existsByDataAndUtente(passi.getData(),utente))
                 throw new PassiAlreadyInsertedException();
 
-        listaPassi.add(passi);
+        passi.setUtente(utente);
         return passiRepository.save(passi);
     }
 

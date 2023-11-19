@@ -30,14 +30,12 @@ public class PesoService {
         if(isNotValid(peso))
             throw new BadRequestException();
 
-        Collection<Peso> pesi = this.getPesi(username);
+        Utente utente = utenteService.getUtente(username);
         // NON devono essere presenti due pesi dello stesso utente nello stesso giorno
-        for(Peso p:pesi){
-            if(peso.getData().equals(p.getData()))
-                throw new WeightAlreadyInsertedException();
-        }
+        if(pesoRepository.existsByDataAndUtente(peso.getData(),utente))
+            throw new WeightAlreadyInsertedException();
 
-        pesi.add(peso);
+        peso.setUtente(utente);
         return pesoRepository.save(peso);
     }
 
