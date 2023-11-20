@@ -69,8 +69,6 @@ public class DiarioController {
             return ResponseEntity.ok(diarioAggiornato);
         }catch(ResourceNotFoundException e){
             throw new ResponseStatusException(HttpStatus.NOT_FOUND,"Diario non trovato!",e);
-        }catch(BadRequestException e){
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"Diario non supportato!",e);
         }
     }
 

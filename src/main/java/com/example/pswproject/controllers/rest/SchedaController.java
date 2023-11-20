@@ -60,8 +60,6 @@ public class SchedaController {
             return ResponseEntity.ok(schedaAggiornata);
         }catch(ResourceNotFoundException e){
             throw new ResponseStatusException(HttpStatus.NOT_FOUND,"Scheda non trovata!",e);
-        }catch(BadRequestException e){
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"Scheda non supportata!",e);
         }
     }
 

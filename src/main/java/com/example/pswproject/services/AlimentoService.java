@@ -33,9 +33,10 @@ public class AlimentoService {
             throw new BadRequestException();
 
         Collection<Alimento> alimenti = this.getAlimenti(username);
-        for(Alimento a: alimenti)
-            if(a.getNome().equals(alimento.getNome()))
+        for(Alimento a: alimenti) {
+            if (a.getNome().equals(alimento.getNome()))
                 throw new AlimentoAlreadyExistsException();
+        }
 
         alimenti.add(alimento);
         return alimentoRepository.save(alimento);

@@ -44,10 +44,7 @@ public class EsercizioService {
         return (esercizio.getId() != null)||(!esercizio.getSerie().isEmpty());
     }
 
-    public Esercizio modifica(String username, Long idScheda, Long id, Esercizio esercizio) throws ResourceNotFoundException,BadRequestException{
-        if(isNotValid(esercizio))
-            throw new BadRequestException();
-
+    public Esercizio modifica(String username, Long idScheda, Long id, Esercizio esercizio) throws ResourceNotFoundException{
         Collection<Esercizio> esercizi = this.getEsercizi(username,idScheda);
         for(Esercizio e:esercizi)
             if(e.getId().equals(id)){

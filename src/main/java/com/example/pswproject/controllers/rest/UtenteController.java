@@ -61,8 +61,6 @@ public class UtenteController {
             return ResponseEntity.ok(utente);
         }catch(ResourceNotFoundException e){
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Utente non trovato!",e);
-        }catch(BadRequestException e){
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"Utente non supportato!",e);
         }
     }
 

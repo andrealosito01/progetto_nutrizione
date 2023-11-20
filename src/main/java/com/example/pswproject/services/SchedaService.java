@@ -41,10 +41,7 @@ public class SchedaService {
         return (scheda.getId() != null)||(!scheda.getEsercizi().isEmpty());
     }
 
-    public Scheda modifica(String username, Long id, Scheda scheda) throws ResourceNotFoundException, BadRequestException{
-        if(isNotValid(scheda))
-            throw new BadRequestException();
-
+    public Scheda modifica(String username, Long id, Scheda scheda) throws ResourceNotFoundException{
         Collection<Scheda> schede = this.getSchede(username);
         for(Scheda s:schede)
             if(s.getId().equals(id)){

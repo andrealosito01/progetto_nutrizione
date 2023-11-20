@@ -32,6 +32,7 @@ public class Esercizio {
 
     @OneToMany(fetch = FetchType.EAGER)
     @JoinColumn(name = "esercizio_id")
+    @OrderBy("numero asc")
     private List<Serie> serie = new ArrayList<>();
 
     public List<Serie> getSerie() { return serie; }

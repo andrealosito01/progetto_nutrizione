@@ -64,9 +64,7 @@ public class UtenteService {
         return utenteRepository.findAll();
     }
 
-    public Utente modifica(String username, Utente u) throws ResourceNotFoundException, BadRequestException {
-       if(isNotValid(u))
-           throw new BadRequestException();
+    public Utente modifica(String username, Utente u) throws ResourceNotFoundException{
         Optional<Utente> opUtente = utenteRepository.findByUsername(username);
         if(opUtente.isEmpty()) {
             // ovviamente ci aspettiamo di non entrare mai in questo blocco

@@ -58,10 +58,7 @@ public class DiarioService {
         return (diario.getId() != null)||(!diario.getVociDiario().isEmpty());
     }
 
-    public Diario modifica(Long id, String username, Diario diario) throws ResourceNotFoundException, BadRequestException {
-        if(isNotValid(diario))
-            throw new BadRequestException();
-
+    public Diario modifica(Long id, String username, Diario diario) throws ResourceNotFoundException{
         Collection<Diario> diari = this.getDiari(username);
         for(Diario d:diari)
             if(d.getId().equals(id)){

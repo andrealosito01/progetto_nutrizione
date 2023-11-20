@@ -60,8 +60,6 @@ public class EsercizioController {
             return ResponseEntity.ok(esercizioAggiornato);
         }catch(ResourceNotFoundException e){
             throw new ResponseStatusException(HttpStatus.NOT_FOUND,"Esercizio non trovato!",e);
-        }catch(BadRequestException e){
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"Esercizio non supportato!");
         }
     }
 
